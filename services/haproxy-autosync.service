@@ -1,0 +1,12 @@
+[Unit]
+Description=HAProxy Config Auto-Sync
+After=network.target haproxy.service
+
+[Service]
+Type=simple
+ExecStart=/bin/bash -c 'while inotifywait -e close_write /etc/haproxy/haproxy.cfg; do sleep 2; /usr/local/bin/haproxy-sync.sh; done'
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
